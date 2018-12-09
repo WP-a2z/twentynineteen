@@ -5,7 +5,6 @@ Twenty Nineteen Editor Styles
 /** === Includes === */
 
 @import "sass/variables-site/variables-site";
-@import "sass/variables-site/colors";
 @import "sass/mixins/mixins-master";
 
 /** === Editor Frame === */
@@ -53,6 +52,14 @@ body {
 			max-width: 125%;
 		}
 	}
+}
+
+/** === Editor Block Toolbar Position === */
+
+// Since 2019 left-aligns wide and fullwide blocks, left align the toolbar too.
+.editor-block-list__block[data-align="wide"] .editor-block-contextual-toolbar .editor-block-toolbar.editor-block-toolbar,
+.editor-block-list__block[data-align="full"] .editor-block-contextual-toolbar .editor-block-toolbar.editor-block-toolbar {
+		max-width: none;
 }
 
 /** === Content Width === */
@@ -153,7 +160,12 @@ a {
 	}
 }
 
-.has-primary-background-color {
+// Use white text against these backgrounds by default.
+.has-primary-background-color,
+.has-secondary-background-color,
+.has-dark-gray-background-color,
+.has-light-gray-background-color {
+	color: $color__background-body;
 
 	p,
 	h1,
@@ -162,9 +174,24 @@ a {
 	h4,
 	h5,
 	h6,
-	a,
-	a:hover {
+	a {
 		color: $color__background-body;
+	}
+}
+
+// Use dark gray text against this background by default.
+.has-white-background-color {
+	color: $color__text-main;
+
+	p,
+	h1,
+	h2,
+	h3,
+	h4,
+	h5,
+	h6,
+	a {
+		color: $color__text-main;
 	}
 }
 
@@ -275,6 +302,13 @@ figcaption,
 	.wp-block-cover {
 		width: 100%;
 		max-width: 100%;
+	}
+
+	@include media(tablet) {
+
+		.wp-block-cover {
+			padding: $size__spacing-unit;
+		}
 	}
 }
 
@@ -392,7 +426,8 @@ figcaption,
 /** === Pullquote === */
 
 .wp-block-pullquote {
-	border: none;
+	border-color: transparent;
+	border-width: 2px;
 	color: #000;
 
 	blockquote {
@@ -412,13 +447,19 @@ figcaption,
 			width: calc(100% - (2 * #{ $size__spacing-unit}));
 			max-width: calc( 100% - (2 * #{ $size__spacing-unit}));
 
+			a,
+			&.has-text-color p,
+			&.has-text-color a {
+				color: inherit;
+			}
+
+			&:not(.has-text-color) {
+				color: $color__background-body;
+			}
+
 			@include media(tablet) {
 				max-width: 80%;
 			}
-		}
-
-		blockquote:not(.has-text-color) {
-			color: $color__background-body;
 		}
 
 		&:not(.has-background-color) {
@@ -694,4 +735,9 @@ ul.wp-block-archives,
 			color: $color__text-light;
 		}
 	}
+}
+
+/* Make sure our non-latin font overrides don't overwrite the iconfont used in the classic editor toolbar */
+.wp-block[data-type="core/freeform"] .mce-btn i {
+	font-family: dashicons !important;
 }
